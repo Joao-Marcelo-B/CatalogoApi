@@ -1,10 +1,14 @@
 using Catalogo.Api.Contexts;
+using Catalogo.Api.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -18,11 +22,29 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseExceptionHandler("/Error");
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+    app.ConfigureExceptionHandler();
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.Use(async (context, next) =>
+{
+    //adicionar o codigo antes do request
+    await next(context);
+    //adicionar o codigo depois do request
+});
+
 app.MapControllers();
+
+//app.Run(async (context) =>
+//{
+//    await context.Response.WriteAsync("Método não encontrado");
+//});
+
 app.Run();
