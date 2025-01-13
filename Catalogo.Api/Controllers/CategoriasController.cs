@@ -1,4 +1,5 @@
 ﻿using Catalogo.Api.Contexts;
+using Catalogo.Api.Filters;
 using Catalogo.Api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,19 +11,23 @@ namespace Catalogo.Api.Controllers
     public class CategoriasController : Controller
     {
         private readonly CatalogoContext _context;
-
-        public CategoriasController(CatalogoContext context)
+        private readonly ILogger _logger;
+        public CategoriasController(CatalogoContext context, ILogger<CategoriasController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet("produtos")]
         public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
         {
+            _logger.LogInformation("================ GET categorias/produtos ===================");
+
             return _context.Categorias.Include(p => p.Produtos).AsNoTracking().ToList();
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
             return _context.Categorias.AsNoTracking().ToList();
@@ -31,10 +36,6 @@ namespace Catalogo.Api.Controllers
         [HttpGet("{id:int}", Name = "ObterCategoria")]
         public ActionResult<Categoria> Get(int id)
         {
-            //throw new Exception("Exceção ao retornar o produto por id");
-            string[] teste = null;
-
-            if(teste.Length > 0) { }
             var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
 
             if (categoria == null)
