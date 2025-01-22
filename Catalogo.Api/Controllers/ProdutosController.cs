@@ -70,13 +70,9 @@ public class ProdutosController : ControllerBase
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        var produto = _repository.GetProduto(id);
-        if (produto is null) 
-            return NotFound();
-
         var resultado = _repository.Delete(id);
         if (resultado)
-            return Ok(produto);
+            return Ok($"Produto de id={id} foi excluido");
         else
             return StatusCode(500, $"Falha ao deletar o produto de id = {id}");
     }
