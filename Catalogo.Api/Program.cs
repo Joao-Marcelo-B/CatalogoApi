@@ -2,6 +2,7 @@ using Catalogo.Api.Contexts;
 using Catalogo.Api.Extensions;
 using Catalogo.Api.Filters;
 using Catalogo.Api.Logging;
+using Catalogo.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -15,6 +16,9 @@ builder.Services.AddControllers(options =>
                 .AddJsonOptions(options =>
                                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddScoped<ApiLoggingFilter>();
+
+builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+
 builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
 {
     LogLevel = LogLevel.Information
