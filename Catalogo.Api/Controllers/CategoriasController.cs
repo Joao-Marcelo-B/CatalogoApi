@@ -11,9 +11,9 @@ namespace Catalogo.Api.Controllers
     [Route("[controller]")]
     public class CategoriasController : Controller
     {
-        private readonly ICategoriaRepository _repository;
+        private readonly IRepository<Categoria> _repository;
         private readonly ILogger _logger;
-        public CategoriasController(ICategoriaRepository repository, ILogger<CategoriasController> logger)
+        public CategoriasController(IRepository<Categoria> repository, ILogger<CategoriasController> logger)
         {
             _repository = repository;
             _logger = logger;
@@ -29,7 +29,7 @@ namespace Catalogo.Api.Controllers
         [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            var categorias = _repository.GetCategorias();
+            var categorias = _repository.GetAll();
 
             return Ok(categorias);
         }
@@ -37,7 +37,7 @@ namespace Catalogo.Api.Controllers
         [HttpGet("{id:int}", Name = "ObterCategoria")]
         public ActionResult<Categoria> Get(int id)
         {
-            var categoria = _repository.GetCategoria(id);
+            var categoria = _repository.Get(x => x.CategoriaId == id);
 
             if (categoria == null)
                 return NotFound("Categoria não encontrada...");
@@ -73,13 +73,14 @@ namespace Catalogo.Api.Controllers
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var categoria = _repository.GetCategoria(id);
+            var categoria = _repository.Get(x => x.CategoriaId ==  id);
 
             if (categoria == null)
             {
                 return NotFound("Categoria não encontrada...");
             }
-            _repository.Delete(id);
+            _repository.Delete(categoria);
+                
             return Ok(categoria);
         }
     }

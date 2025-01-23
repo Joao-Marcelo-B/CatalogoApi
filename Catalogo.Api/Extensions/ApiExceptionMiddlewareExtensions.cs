@@ -22,7 +22,7 @@ namespace Catalogo.Api.Extensions
                         {
                             StatusCode = context.Response.StatusCode,
                             Message = contextFeature.Error.Message,
-                            Trace = contextFeature.Error.StackTrace
+                            //Trace = contextFeature.Error.StackTrace
                         }.ToString());
                     }
                 });
