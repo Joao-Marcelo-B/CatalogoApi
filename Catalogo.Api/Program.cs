@@ -1,4 +1,5 @@
 using Catalogo.Api.Contexts;
+using Catalogo.Api.DTOs.Mappings;
 using Catalogo.Api.Extensions;
 using Catalogo.Api.Filters;
 using Catalogo.Api.Logging;
@@ -17,7 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 //                                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddControllers()
                 .AddJsonOptions(options =>
-                                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+                                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+                .AddNewtonsoftJson();
 builder.Services.AddScoped<ApiLoggingFilter>();
 
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
@@ -36,6 +38,7 @@ string? catalogoConnection = builder.Configuration.GetConnectionString("Catalogo
 builder.Services.AddDbContext<CatalogoContext>(options => 
                 options.UseMySql(catalogoConnection, 
                 ServerVersion.AutoDetect(catalogoConnection)));
+builder.Services.AddAutoMapper(typeof(ProdutoDTOMappingProfile));
 
 var app = builder.Build();
 
