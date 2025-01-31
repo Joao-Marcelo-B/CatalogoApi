@@ -9,93 +9,92 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Catalogo.Api.Migrations
+namespace Catalogo.Api.Migrations;
+
+[DbContext(typeof(CatalogoContext))]
+[Migration("20250109014239_Init")]
+partial class Init
 {
-    [DbContext(typeof(CatalogoContext))]
-    [Migration("20250109014239_Init")]
-    partial class Init
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+        modelBuilder
+            .HasAnnotation("ProductVersion", "8.0.4")
+            .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+        MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("Catalogo.Api.Model.Categoria", b =>
-                {
-                    b.Property<int>("CategoriaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Catalogo.Api.Model.Categoria", b =>
+            {
+                b.Property<int>("CategoriaId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("CategoriaId"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("CategoriaId"));
 
-                    b.Property<string>("ImagemUrl")
-                        .HasColumnType("longtext");
+                b.Property<string>("ImagemUrl")
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("Nome")
-                        .HasColumnType("longtext");
+                b.Property<string>("Nome")
+                    .HasColumnType("longtext");
 
-                    b.HasKey("CategoriaId");
+                b.HasKey("CategoriaId");
 
-                    b.ToTable("Categorias");
-                });
+                b.ToTable("Categorias");
+            });
 
-            modelBuilder.Entity("Catalogo.Api.Model.Produto", b =>
-                {
-                    b.Property<int>("ProdutoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+        modelBuilder.Entity("Catalogo.Api.Model.Produto", b =>
+            {
+                b.Property<int>("ProdutoId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ProdutoId"));
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ProdutoId"));
 
-                    b.Property<int>("CategoriaId")
-                        .HasColumnType("int");
+                b.Property<int>("CategoriaId")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime>("DataCadastro")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime>("DataCadastro")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Descricao")
-                        .HasColumnType("longtext");
+                b.Property<string>("Descricao")
+                    .HasColumnType("longtext");
 
-                    b.Property<float>("Estoque")
-                        .HasColumnType("float");
+                b.Property<float>("Estoque")
+                    .HasColumnType("float");
 
-                    b.Property<string>("ImagemUrl")
-                        .HasColumnType("longtext");
+                b.Property<string>("ImagemUrl")
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("Nome")
-                        .HasColumnType("longtext");
+                b.Property<string>("Nome")
+                    .HasColumnType("longtext");
 
-                    b.Property<decimal>("Preco")
-                        .HasColumnType("decimal(65,30)");
+                b.Property<decimal>("Preco")
+                    .HasColumnType("decimal(65,30)");
 
-                    b.HasKey("ProdutoId");
+                b.HasKey("ProdutoId");
 
-                    b.HasIndex("CategoriaId");
+                b.HasIndex("CategoriaId");
 
-                    b.ToTable("Produtos");
-                });
+                b.ToTable("Produtos");
+            });
 
-            modelBuilder.Entity("Catalogo.Api.Model.Produto", b =>
-                {
-                    b.HasOne("Catalogo.Api.Model.Categoria", "Categoria")
-                        .WithMany("Produtos")
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("Catalogo.Api.Model.Produto", b =>
+            {
+                b.HasOne("Catalogo.Api.Model.Categoria", "Categoria")
+                    .WithMany("Produtos")
+                    .HasForeignKey("CategoriaId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Categoria");
-                });
+                b.Navigation("Categoria");
+            });
 
-            modelBuilder.Entity("Catalogo.Api.Model.Categoria", b =>
-                {
-                    b.Navigation("Produtos");
-                });
+        modelBuilder.Entity("Catalogo.Api.Model.Categoria", b =>
+            {
+                b.Navigation("Produtos");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

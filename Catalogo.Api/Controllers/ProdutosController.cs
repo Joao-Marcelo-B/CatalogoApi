@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Catalogo.Api.DTOs;
 using Catalogo.Api.Model;
+using Catalogo.Api.Pagination;
 using Catalogo.Api.Repositories;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Catalogo.Api.Controllers;
 
@@ -18,6 +20,28 @@ public class ProdutosController : ControllerBase
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+    }
+
+    [HttpGet("pagination")]
+    public ActionResult<IEnumerable<ProdutoDTO>> Get([FromQuery] ProdutosParameters proditosParameters)
+    {
+        var produtos = _unitOfWork.ProdutoRepository.GetProdutos(proditosParameters);
+
+        var metadata = new
+        {
+            produtos.TotalCount,
+            produtos.PageSize,
+            produtos.CurrentPage,
+            produtos.TotalPages,
+            produtos.HasNext,
+            produtos.HasPrevious
+        };
+
+        Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+        var produtosDTO = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
+
+        return Ok(produtosDTO);
     }
 
     [HttpGet("categorias/{id:int}")]

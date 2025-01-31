@@ -13,9 +13,9 @@ public class Repository<T> : IRepository<T> where T : class
         _context = context;
     }
 
-    public IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate)
+    public IQueryable<T> Get()
     {
-        return _context.Set<T>().AsNoTracking().Where(predicate).ToList();
+        return _context.Set<T>().AsNoTracking();
     }
 
     public IEnumerable<T> GetAll()
