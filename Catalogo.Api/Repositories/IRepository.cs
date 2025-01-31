@@ -4,9 +4,9 @@ namespace Catalogo.Api.Repositories;
 
 public interface IRepository<T> where T : class
 {
-    IEnumerable<T> GetAll();
-    IQueryable<T> Get();
-    T? Get(Expression<Func<T, bool>> predicate);
+    Task<IEnumerable<T>> GetAllAsync();
+    Task<T?> GetAsync(Expression<Func<T, bool>> predicate);
+    IQueryable<T> GetAsQueryable();
     T Create(T entity);
     T Update(T entity);
     T Delete(T entity);

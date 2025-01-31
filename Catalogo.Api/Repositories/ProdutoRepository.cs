@@ -18,17 +18,47 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
     //            .Take(produtosParameters.PageSize).ToList();
     //}
 
-    public PagedList<Produto> GetProdutos(ProdutosParameters produtosParameters)
+    public async Task<PagedResult<Produto>> GetProdutosAsync(ProdutosParameters produtosParameters)
     {
-        var produtos = Get()
-                .OrderBy(on => on.ProdutoId);
-        var produtosOrdenados = PagedList<Produto>.ToPageList(produtos, produtosParameters.PageNumber, produtosParameters.PageSize);
+        var produtos = GetAsQueryable()
+                            .OrderBy(on => on.ProdutoId);
+        var produtosOrdenados = await produtos.ToPagedListAsync(produtosParameters.PageNumber, produtosParameters.PageSize);
 
         return produtosOrdenados;
     }
 
-    public IEnumerable<Produto> GetProdutosPorCategoria(int id)
+    public async Task<PagedResult<Produto>> GetProdutosFiltroPrecoAsync(ProdutosFiltroPreco produtosFiltroParams)
     {
-        return GetAll().Where(p => p.CategoriaId == id);
+        var produtos = GetAsQueryable();
+
+        if (produtosFiltroParams.Preco.HasValue && !string.IsNullOrEmpty(produtosFiltroParams.PrecoCriterio))
+        {
+            if (produtosFiltroParams.PrecoCriterio.Equals("maior", StringComparison.OrdinalIgnoreCase))
+            {
+                produtos = produtos.Where(x => x.Preco > produtosFiltroParams.Preco.Value)
+                                    .OrderBy(on => on.Preco);
+            }
+            else if (produtosFiltroParams.PrecoCriterio.Equals("menor", StringComparison.OrdinalIgnoreCase))
+            {
+                produtos = produtos.Where(x => x.Preco < produtosFiltroParams.Preco.Value)
+                                    .OrderBy(on => on.Preco);
+            }
+            else if (produtosFiltroParams.PrecoCriterio.Equals("igual", StringComparison.OrdinalIgnoreCase))
+            {
+                produtos = produtos.Where(x => x.Preco == produtosFiltroParams.Preco.Value)
+                                    .OrderBy(on => on.Preco);
+            }
+        }
+        var produtosFiltrados = await produtos.ToPagedListAsync(produtosFiltroParams.PageNumber, produtosFiltroParams.PageSize);
+
+        return produtosFiltrados;
+    }
+
+    public async Task<IEnumerable<Produto>> GetProdutosPorCategoriaAsync(int id)
+    {
+        var produtos = await GetAllAsync();
+        var produtosPorCategoria = produtos.Where(x => x.CategoriaId == id);
+
+        return produtosPorCategoria;
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Catalogo.Api.Pagination;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Catalogo.Api.Pagination;
 
 public class PagedList<T> : List<T> where T : class
 {
@@ -27,4 +29,12 @@ public class PagedList<T> : List<T> where T : class
 
         return new PagedList<T>(items, count, pageNumber, pageSize);
     }
+
+    //public async static Task<PagedList<T>> ToPageListAsync(IQueryable<T> source, int pageNumber, int pageSize)
+    //{
+    //    var count = await source.CountAsync();
+    //    var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+    //    return new PagedList<T>(items, count, pageNumber, pageSize);
+    //}
 }
