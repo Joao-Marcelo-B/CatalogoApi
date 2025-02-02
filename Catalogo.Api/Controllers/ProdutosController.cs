@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Catalogo.Api.DTOs;
-using Catalogo.Api.Model;
+using Catalogo.Api.Models;
 using Catalogo.Api.Pagination;
 using Catalogo.Api.Repositories;
 using Microsoft.AspNetCore.JsonPatch;

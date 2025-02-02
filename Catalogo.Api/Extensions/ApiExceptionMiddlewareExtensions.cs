@@ -1,4 +1,4 @@
-﻿using Catalogo.Api.Model;
+﻿using Catalogo.Api.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 

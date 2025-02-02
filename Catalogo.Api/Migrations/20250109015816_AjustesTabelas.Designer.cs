@@ -25,7 +25,7 @@ partial class AjustesTabelas
 
         MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-        modelBuilder.Entity("Catalogo.Api.Model.Categoria", b =>
+        modelBuilder.Entity("Catalogo.Api.Models.Categoria", b =>
             {
                 b.Property<int>("CategoriaId")
                     .ValueGeneratedOnAdd()
@@ -48,7 +48,7 @@ partial class AjustesTabelas
                 b.ToTable("Categorias");
             });
 
-        modelBuilder.Entity("Catalogo.Api.Model.Produto", b =>
+        modelBuilder.Entity("Catalogo.Api.Models.Produto", b =>
             {
                 b.Property<int>("ProdutoId")
                     .ValueGeneratedOnAdd()
@@ -90,9 +90,9 @@ partial class AjustesTabelas
                 b.ToTable("Produtos");
             });
 
-        modelBuilder.Entity("Catalogo.Api.Model.Produto", b =>
+        modelBuilder.Entity("Catalogo.Api.Models.Produto", b =>
             {
-                b.HasOne("Catalogo.Api.Model.Categoria", "Categoria")
+                b.HasOne("Catalogo.Api.Models.Categoria", "Categoria")
                     .WithMany("Produtos")
                     .HasForeignKey("CategoriaId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -101,7 +101,7 @@ partial class AjustesTabelas
                 b.Navigation("Categoria");
             });
 
-        modelBuilder.Entity("Catalogo.Api.Model.Categoria", b =>
+        modelBuilder.Entity("Catalogo.Api.Models.Categoria", b =>
             {
                 b.Navigation("Produtos");
             });

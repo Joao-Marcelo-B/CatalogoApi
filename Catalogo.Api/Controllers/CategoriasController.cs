@@ -1,7 +1,7 @@
 ﻿using Catalogo.Api.DTOs;
 using Catalogo.Api.DTOs.Mappings;
 using Catalogo.Api.Filters;
-using Catalogo.Api.Model;
+using Catalogo.Api.Models;
 using Catalogo.Api.Pagination;
 using Catalogo.Api.Repositories;
 using Microsoft.AspNetCore.Mvc;

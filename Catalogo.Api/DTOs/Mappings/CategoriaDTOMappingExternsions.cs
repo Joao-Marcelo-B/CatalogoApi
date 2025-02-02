@@ -1,4 +1,4 @@
-﻿using Catalogo.Api.Model;
+﻿using Catalogo.Api.Models;
 
 namespace Catalogo.Api.DTOs.Mappings;
 

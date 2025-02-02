@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Catalogo.Api.Model;
+namespace Catalogo.Api.Models;
 public class Categoria
 {
     public Categoria()

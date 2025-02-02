@@ -1,5 +1,5 @@
 ﻿using Catalogo.Api.Contexts;
-using Catalogo.Api.Model;
+using Catalogo.Api.Models;
 using Catalogo.Api.Pagination;
 using X.PagedList;
 using X.PagedList.Extensions;

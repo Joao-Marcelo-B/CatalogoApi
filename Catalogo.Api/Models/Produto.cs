@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace Catalogo.Api.Model;
+namespace Catalogo.Api.Models;
 
 public class Produto : IValidatableObject
 {
