@@ -4,6 +4,7 @@ using Catalogo.Api.Filters;
 using Catalogo.Api.Models;
 using Catalogo.Api.Pagination;
 using Catalogo.Api.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -62,6 +63,7 @@ public class CategoriasController : Controller
 
     [HttpGet]
     [ServiceFilter(typeof(ApiLoggingFilter))]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<CategoriaDTO>>> Get()
     {
         var categorias = await _unitOfWork.CategoriaRepository.GetAllAsync();
