@@ -71,7 +71,7 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Policy = "UserOnly")]
     public async Task<ActionResult<IEnumerable<ProdutoDTO>>> Get()
     {
         var produtos = await _unitOfWork.ProdutoRepository.GetAllAsync();
