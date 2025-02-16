@@ -8,6 +8,7 @@ using Catalogo.Api.Repositories;
 using Catalogo.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -28,19 +29,31 @@ builder.Services.AddControllers()
                                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
                 .AddNewtonsoftJson();
 
-var OrigensComAcessoPermitido = "_origensComAcessoPermitido";
-
+//var OrigensComAcessoPermitido = "_origensComAcessoPermitido";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: OrigensComAcessoPermitido,
+    options.AddPolicy("OrigensComAcessoPermitido",
         builder =>
         {
-            builder.WithOrigins("https://apirequest.io");
+            builder.WithOrigins("https://localhost:7126")
+                    .WithMethods("GET", "POST")
+                    .AllowAnyHeader()
+                    .AllowCredentials();
         });
 });
 
-builder.Services.AddScoped<ApiLoggingFilter>();
+builder.Services.AddRateLimiter(rateLimiterOptions =>
+{
+    rateLimiterOptions.AddFixedWindowLimiter(policyName: "fixedwindow", options =>
+    {
+        options.PermitLimit = 1;
+        options.Window = TimeSpan.FromSeconds(5);
+        options.QueueLimit = 0;
+    });
+    rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
 
+builder.Services.AddScoped<ApiLoggingFilter>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -151,8 +164,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseRateLimiter();
 
-app.UseCors(OrigensComAcessoPermitido);
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

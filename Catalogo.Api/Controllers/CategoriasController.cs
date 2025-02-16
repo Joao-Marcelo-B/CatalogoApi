@@ -5,11 +5,15 @@ using Catalogo.Api.Models;
 using Catalogo.Api.Pagination;
 using Catalogo.Api.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
 
 namespace Catalogo.Api.Controllers;
 
+//[EnableCors("OrigensComAcessoPermitido")]
+[EnableRateLimiting("fixedwindow")]
 [ApiController]
 [Route("[controller]")]
 public class CategoriasController : Controller
@@ -63,7 +67,8 @@ public class CategoriasController : Controller
 
     [HttpGet]
     [ServiceFilter(typeof(ApiLoggingFilter))]
-    [Authorize]
+    [DisableRateLimiting]
+    //[Authorize]
     public async Task<ActionResult<IEnumerable<CategoriaDTO>>> Get()
     {
         var categorias = await _unitOfWork.CategoriaRepository.GetAllAsync();
@@ -73,6 +78,7 @@ public class CategoriasController : Controller
         return Ok(categoriasDTO);
     }
 
+    [DisableCors]
     [HttpGet("{id:int}", Name = "ObterCategoria")]
     public async Task<ActionResult<CategoriaDTO>> Get(int id)
     {
