@@ -4,6 +4,7 @@ using Catalogo.Api.Extensions;
 using Catalogo.Api.Filters;
 using Catalogo.Api.Logging;
 using Catalogo.Api.Models;
+using Catalogo.Api.RateLimitOptions;
 using Catalogo.Api.Repositories;
 using Catalogo.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,15 +44,37 @@ builder.Services.AddCors(options =>
         });
 });
 
+var myOptions = new MyRateLimitOptions();
+
+builder.Configuration.GetSection(MyRateLimitOptions.MyRateLimit).Bind(myOptions);
+
 builder.Services.AddRateLimiter(rateLimiterOptions =>
 {
     rateLimiterOptions.AddFixedWindowLimiter(policyName: "fixedwindow", options =>
     {
-        options.PermitLimit = 1;
-        options.Window = TimeSpan.FromSeconds(5);
-        options.QueueLimit = 0;
+        options.PermitLimit = myOptions.PermitLimit;
+        options.Window = TimeSpan.FromSeconds(myOptions.Window);
+        options.QueueLimit = myOptions.QueueLimit;
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
     });
     rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                            RateLimitPartition.GetFixedWindowLimiter(
+                                partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+                                factory: partition => new FixedWindowRateLimiterOptions
+                                {
+                                    AutoReplenishment = true,
+                                    PermitLimit = 2,
+                                    QueueLimit = 0,
+                                    Window = TimeSpan.FromSeconds(10)
+                                }));
+
 });
 
 builder.Services.AddScoped<ApiLoggingFilter>();
