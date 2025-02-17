@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Catalogo.Api.Contexts;
 using Catalogo.Api.DTOs.Mappings;
 using Catalogo.Api.Extensions;
@@ -75,6 +76,19 @@ builder.Services.AddRateLimiter(options =>
                                     Window = TimeSpan.FromSeconds(10)
                                 }));
 
+});
+
+builder.Services.AddApiVersioning(o =>
+{
+    o.DefaultApiVersion = new ApiVersion(1, 0);
+    o.AssumeDefaultVersionWhenUnspecified = true;
+    o.ReportApiVersions = true;
+    o.ApiVersionReader = ApiVersionReader.Combine(new QueryStringApiVersionReader(), 
+                                                  new UrlSegmentApiVersionReader());
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
 });
 
 builder.Services.AddScoped<ApiLoggingFilter>();
