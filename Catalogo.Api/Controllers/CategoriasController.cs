@@ -65,6 +65,10 @@ public class CategoriasController : Controller
         return Ok(categoriaDTO);
     }
 
+    /// <summary>
+    ///  Retorna todas as categorias
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [ServiceFilter(typeof(ApiLoggingFilter))]
     [DisableRateLimiting]
@@ -92,6 +96,21 @@ public class CategoriasController : Controller
         return Ok(categoriaDTO);
     }
 
+    /// <summary>
+    /// Inclui uma nova categoria
+    /// </summary>
+    /// <remarks>
+    /// Exemplo de request:
+    /// 
+    ///     POST categorias
+    ///     {
+    ///         "categoriaId": 1,
+    ///         "nome": "categoria1",
+    ///         "imagemUrl": "teste.png"
+    ///     }
+    /// </remarks>
+    /// <param name="categoriaDTO"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<ActionResult<CategoriaDTO>> Post(CategoriaDTO categoriaDTO)
     {

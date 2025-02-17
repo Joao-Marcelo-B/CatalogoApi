@@ -1,3 +1,4 @@
+using System.Reflection;
 using Asp.Versioning;
 using Catalogo.Api.Contexts;
 using Catalogo.Api.DTOs.Mappings;
@@ -25,7 +26,7 @@ var builder = WebApplication.CreateBuilder(args);
 //                {
 //                    options.Filters.Add(typeof(ApiExceptionFilter));
 //                })
-//                .AddJsonOptions(options =>
+//                   .AddJsonOptions(options =>
 //                                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddControllers()
                 .AddJsonOptions(options =>
@@ -109,7 +110,23 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "Catalogo API",
         Version = "v1",
+        Description = "Catalogo de Produtos e Categorias",
+        TermsOfService = new Uri("https://google.com"),
+        Contact = new OpenApiContact()
+        {
+            Name = "Joao Marcelo",
+            Email = "joaomarcelobn157@hotmail.com",
+            Url = new Uri("https://google.com")
+        },
+        License = new OpenApiLicense()
+        {
+            Name = "License",
+            Url = new Uri("https://google.com")
+        }
     });
+
+    var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -220,7 +237,7 @@ app.MapControllers();
 
 //app.Run(async (context) =>
 //{
-//    await context.Response.WriteAsync("Método não encontrado");
+//    await context.Response.WriteAsync("Mï¿½todo nï¿½o encontrado");
 //});
 
 app.Run();
