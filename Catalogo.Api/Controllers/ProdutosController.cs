@@ -103,7 +103,7 @@ public class ProdutosController : ControllerBase
     public async Task<ActionResult<ProdutoDTO>> Post([FromBody] ProdutoDTO produtoDTO)
     {
         if (produtoDTO is null) 
-            return NotFound();
+            return BadRequest();
 
         var produto = _mapper.Map<Produto>(produtoDTO);
 
