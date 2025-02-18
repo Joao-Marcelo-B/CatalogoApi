@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace Catalogo.Api.Controllers;
 
@@ -84,6 +85,9 @@ public class CategoriasController : Controller
 
     [DisableCors]
     [HttpGet("{id:int}", Name = "ObterCategoria")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
     public async Task<ActionResult<CategoriaDTO>> Get(int id)
     {
         var categoria = await _unitOfWork.CategoriaRepository.GetAsync(x => x.CategoriaId == id);
