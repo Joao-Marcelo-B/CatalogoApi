@@ -16,15 +16,18 @@ public class CustomerLogger : ILogger
         return logLevel == loggerConfig.LogLevel;
     }
 
-    public IDisposable? BeginScope<TState>(TState state)
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
     {
         return null;
     }
 
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception, string> formatter)
     {
-        string mensagem = $"{logLevel.ToString()}: {eventId.Id} - {formatter(state, exception)}";
-        EscreverTextoNoArquivo(mensagem);
+        if (exception != null)
+        {
+            string mensagem = $"{logLevel.ToString()}: {eventId.Id} - {formatter(state, exception)}";
+            EscreverTextoNoArquivo(mensagem);
+        }
     }
 
     private void EscreverTextoNoArquivo(string mensagem)

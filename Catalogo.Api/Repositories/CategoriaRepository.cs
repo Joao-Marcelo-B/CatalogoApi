@@ -28,7 +28,7 @@ public class CategoriaRepository : Repository<Categoria>, ICategoriaRepository
 
         if (!string.IsNullOrEmpty(filtro.Nome))
         {
-            categorias = categorias.Where(x => x.Nome.Contains(filtro.Nome))
+            categorias = categorias.Where(x => x.Nome!.Contains(filtro.Nome))
                                    .OrderBy(on => on.Nome);
         }
 
@@ -37,7 +37,7 @@ public class CategoriaRepository : Repository<Categoria>, ICategoriaRepository
         return categoriasFiltradas;
     }
 
-    public async Task<IPagedList<Categoria>> GetCategoriasV1Async(CategoriasParameters categoriasParameters)
+    public IPagedList<Categoria> GetCategorias(CategoriasParameters categoriasParameters)
     {
         var categorias = GetAsQueryable()
                 .OrderBy(on => on.CategoriaId);
@@ -49,13 +49,13 @@ public class CategoriaRepository : Repository<Categoria>, ICategoriaRepository
         return categoriasOrdenadas;
     }
 
-    public async Task<IPagedList<Categoria>> GetCategoriasFiltroNomeV1Async(CategoriasFiltroNome filtro)
+    public IPagedList<Categoria> GetCategoriasFiltroNome(CategoriasFiltroNome filtro)
     {
         var categorias = GetAsQueryable();
 
         if (!string.IsNullOrEmpty(filtro.Nome))
         {
-            categorias = categorias.Where(x => x.Nome.Contains(filtro.Nome))
+            categorias = categorias.Where(x => x.Nome!.Contains(filtro.Nome))
                                    .OrderBy(on => on.Nome);
         }
 

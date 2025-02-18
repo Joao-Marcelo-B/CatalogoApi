@@ -12,6 +12,7 @@ namespace Catalogo.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Produces("application/json")]
 public class ProdutosController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
